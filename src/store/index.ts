@@ -1,17 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex, { StoreOptions } from "vuex";
+import postStore, { postState, PostStateType } from "@/store/post";
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export default new Vuex.Store({
+export interface IRootState {
+  post: PostStateType;
+}
+
+const store = new Vuex.Store({
   state: {
+    post: postState,
   },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
+  getters: {},
+  mutations: {},
+  actions: {},
   modules: {
-  }
-})
+    post: postStore,
+  },
+});
+
+export default store;
