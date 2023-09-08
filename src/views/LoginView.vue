@@ -45,10 +45,14 @@ export default {
     },
     handleSubmit() {
       const { email, password } = this;
-      this.$store.dispatch({
-        type: ACTION.FETCH_LOGIN,
-        account: { email, password },
-      });
+      this.$store
+        .dispatch({
+          type: ACTION.FETCH_LOGIN,
+          account: { email, password },
+        })
+        .then((res: any) => {
+          debugger;
+        });
     },
   },
 };

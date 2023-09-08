@@ -85,15 +85,15 @@ export default {
           },
         })
         .then((res: any) => {
-          const { status, data, message } = res;
+          debugger;
 
-          if (status !== 200) {
-            vm.isValid = false;
-            vm.message.email = "이미 존재하는 계정 입니다.";
-            return;
-          }
+          // if (status !== 200) {
+          //   vm.isValid = false;
+          //   vm.message.email = "이미 존재하는 계정 입니다.";
+          //   return;
+          // }
 
-          this.$router.push("/login");
+          // this.$router.push("/login");
         });
     },
     handleChange(e: any) {
