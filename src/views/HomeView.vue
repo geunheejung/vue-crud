@@ -12,9 +12,9 @@
           v-bind:likes="item.likes"
           v-bind:reviews="item.reviews"
           v-bind:thumbnail_url="item.thumbnail_url"
-          v-bind:time_ago="item.time_ago"
           v-bind:user_name="item.user_name"
           v-bind:user_profile_url="item.user_profile_url"
+          v-bind:created_at="item.created_at"
         >
         </post-card>
       </div>

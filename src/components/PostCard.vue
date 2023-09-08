@@ -10,15 +10,13 @@
       {{ content }}
     </div>
     <p class="info-container">
-      <span class="time_ago">{{ time_ago }}</span>
+      <span class="time_ago">{{ timeAgo }}</span>
       <span> | </span>
       <span class="reviews">{{ reviews }}개의 댓글</span>
     </p>
     <div class="post-info-container">
       <div class="profile">
-        <div class="profile-container">
-          <img :src="user_profile_url" alt="유저 프로필 이미지" />
-        </div>
+        <user-profile v-bind:img_url="user_profile_url"></user-profile>
         <span class="username">{{ user_name }}</span>
       </div>
       <div class="likes">
@@ -30,16 +28,27 @@
 </template>
 
 <script lang="ts">
+import getTimeAgo from "@/utils/getTimeAgo";
+import UserProfile from "@/components/UserProfile.vue";
+
 export default {
+  components: {
+    UserProfile,
+  },
   props: {
     id: String,
     thumbnail_url: String,
     content: String,
-    time_ago: String,
     reviews: Number,
     user_profile_url: String,
     user_name: String,
     likes: Number,
+    created_at: Date,
+  },
+  computed: {
+    timeAgo() {
+      return getTimeAgo(this.created_at);
+    },
   },
 };
 </script>

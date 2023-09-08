@@ -17,7 +17,8 @@ export default {
   z-index: 10;
   position: absolute;
   left: 0;
-  bottom: 40px;
+  top: 50px;
+
   right: 0;
   min-width: 400px;
   width: 80vw;

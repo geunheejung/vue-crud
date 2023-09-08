@@ -7,7 +7,6 @@ export interface IPost {
   content: string;
   thumbnail_url: string;
   user_profile_url: string;
-  time_ago: string;
   reviews: number;
   likes: number;
   created_at: Date;
@@ -27,7 +26,6 @@ const createPost = (post: PostPayloadType) => {
     id: uuidv4(),
     reviews: 0,
     likes: 0,
-    time_ago: new Date().toString(),
     created_at: new Date(),
     updated_at: new Date(),
   };

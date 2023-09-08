@@ -1,48 +1,65 @@
 <template>
   <common-modal v-bind:isOpen="isOpen">
-    <div class="title-container">
-      <input type="text" v-model="title" placeholder="제목 없음" />
-    </div>
-    <div class="content-container">
-      <textarea cols="30" rows="10" v-model="content"></textarea>
-    </div>
-    <div class="upload-img-container">
-      <div
-        class="preview-img"
-        v-bind:style="{ backgroundImage: `url(${previewImgUrl})` }"
-      >
-        <img
-          src="../assets/upload.png"
-          alt=""
-          width="100"
-          v-if="!previewImgUrl"
+    <form v-on:submit.prevent="handleSubmit">
+      <div class="title-container">
+        <input
+          id="title"
+          type="text"
+          v-model="title"
+          placeholder="제목 없음"
+          ref="titleField"
         />
       </div>
-      <label for="upload-image" class="button-primary">썸네일 업로드</label>
-      <input
-        id="upload-image"
-        type="file"
-        accept="image/*"
-        v-on:change="handleFileInput"
-        hidden
-      />
-    </div>
+      <div class="content-container">
+        <textarea
+          id="content"
+          cols="30"
+          rows="10"
+          name="content"
+          v-model="content"
+          placeholder="..."
+          ref="contentField"
+        ></textarea>
+      </div>
+      <div class="upload-img-container">
+        <div
+          class="preview-img"
+          v-bind:style="{ backgroundImage: `url(${previewImgUrl})` }"
+        >
+          <img
+            src="../assets/upload.png"
+            alt=""
+            width="100"
+            v-if="!previewImgUrl"
+          />
+        </div>
+        <label for="upload-image" class="button-primary">썸네일 업로드</label>
+        <input
+          id="upload-image"
+          type="file"
+          accept="image/*"
+          v-on:change="handleFileInput"
+          hidden
+        />
+      </div>
 
-    <div class="button-container">
-      <button class="button-primary" @click="handleWrite">
-        <i class="fa-solid fa-plus"></i>
-        작성하기
-      </button>
-      <button class="button-primary" @click="handleClose">
-        <i class="fa-solid fa-xmark"></i>
-        닫기
-      </button>
-    </div>
+      <div class="button-container">
+        <button type="submit" class="button-primary">
+          <i class="fa-solid fa-plus"></i>
+          작성하기
+        </button>
+        <button class="button-primary" @click="handleClose">
+          <i class="fa-solid fa-xmark"></i>
+          닫기
+        </button>
+      </div>
+    </form>
   </common-modal>
 </template>
 
 <script lang="ts">
-import imageFileReader from "@/utils/imageFileReader";
+import imageFileReader from "@/utils/readImgFile";
+import getTimeAgo from "@/utils/getTimeAgo";
 import { ACTION } from "@/store/post/actions";
 import { PostPayloadType } from "../db/createPost";
 import CommonModal from "@/components/CommonModal.vue";
@@ -60,34 +77,39 @@ export default {
       content: "",
       selectedFile: null,
       previewImgUrl: null,
+      isValid: false,
     };
   },
   methods: {
-    handleWrite() {
-      const { title, content, $store } = this;
-      const post: PostPayloadType = {
-        title,
-        content,
-        author: "geuni",
-        thumbnail_url: this.previewImgUrl,
-        user_profile_url: "https://picsum.photos/40/40 ",
-      };
-
-      $store
-        .dispatch({ type: ACTION.FETCH_SET_POST, data: post })
-        .then((res: unknown) => {
-          this.$emit("onClose");
-          this.clear();
-        });
-    },
-    handleClose() {
-      this.$emit("onClose");
-    },
     clear() {
       this.title = "";
       this.content = "";
       this.selectedFile = null;
       this.previewImgUrl = null;
+    },
+    validate() {
+      const {
+        title,
+        content,
+        $refs: { titleField, contentField },
+      } = this;
+
+      const textCheck = (text: string) => text.trim().length > 0;
+
+      if (!textCheck(title)) {
+        titleField.focus();
+        return false;
+      }
+
+      if (!textCheck(content)) {
+        contentField.focus();
+        return false;
+      }
+
+      return true;
+    },
+    handleClose() {
+      this.$emit("onClose");
     },
     handleFileInput(e: any) {
       const fileList = e.target.files;
@@ -99,7 +121,7 @@ export default {
         this.previewImgUrl = null;
       }
 
-      const file = imageFileReader(
+      imageFileReader(
         fileList,
         (e) => {
           this.previewImgUrl = e.target?.result;
@@ -109,30 +131,33 @@ export default {
         }
       );
     },
+    handleSubmit() {
+      this.isValid = this.validate();
+
+      if (!this.isValid) return;
+
+      const { title, content } = this;
+
+      const post: PostPayloadType = {
+        title,
+        content,
+        author: "geuni",
+        thumbnail_url: this.previewImgUrl || `https://picsum.photos/40/40`,
+        user_profile_url: "https://picsum.photos/40/40",
+      };
+
+      this.$store
+        .dispatch({ type: ACTION.FETCH_SET_POST, data: post })
+        .then((res: unknown) => {
+          this.$emit("onClose");
+          this.clear();
+        });
+    },
   },
 };
 </script>
 
 <style scope>
-.write-modal-container {
-  z-index: 10;
-  position: absolute;
-  left: 0;
-  bottom: 40px;
-  right: 0;
-  min-width: 400px;
-  width: 80vw;
-  height: 80vh;
-  padding: 63px;
-  box-sizing: border-box;
-  border-radius: 3px;
-  background: #fff;
-  margin: auto;
-
-  box-shadow: rgba(15, 15, 15, 0.016) 0px 0px 0px 1px,
-    rgba(15, 15, 15, 0.03) 0px 3px 6px, rgba(15, 15, 15, 0.06) 0px 9px 24px;
-  color: rgb(55, 53, 47);
-}
 .title-container {
   font-weight: 700;
   line-height: 1.2;
@@ -211,3 +236,4 @@ export default {
   }
 }
 </style>
+@/utils/readImgFile
