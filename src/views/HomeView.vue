@@ -43,21 +43,6 @@ export default {
 </script>
 
 <style>
-.button-primary {
-  min-width: 60px;
-  padding: 5px 10px;
-  font-weight: bold;
-  background: #2c3e50;
-  color: #fff;
-  font-size: 0.7rem;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-.button-primary:hover {
-  background: #42b983;
-}
-
 .card-list-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20%, auto));

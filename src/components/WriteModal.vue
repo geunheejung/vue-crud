@@ -44,14 +44,14 @@
       </div>
 
       <div class="button-container">
-        <button type="submit" class="button-primary">
+        <button-component v-bind:type="'submit'">
           <i class="fa-solid fa-plus"></i>
           작성하기
-        </button>
-        <button class="button-primary" @click="handleClose">
+        </button-component>
+        <button-component @onClick="handleClose">
           <i class="fa-solid fa-xmark"></i>
           닫기
-        </button>
+        </button-component>
       </div>
     </form>
   </common-modal>
@@ -59,10 +59,10 @@
 
 <script lang="ts">
 import imageFileReader from "@/utils/readImgFile";
-import getTimeAgo from "@/utils/getTimeAgo";
 import { ACTION } from "@/store/post/actions";
 import { PostPayloadType } from "../db/createPost";
 import CommonModal from "@/components/CommonModal.vue";
+import ButtonComponent from "@/components/ButtonComponent.vue";
 
 export default {
   props: {
@@ -70,6 +70,7 @@ export default {
   },
   components: {
     CommonModal,
+    ButtonComponent,
   },
   data() {
     return {
@@ -236,4 +237,3 @@ export default {
   }
 }
 </style>
-@/utils/readImgFile
